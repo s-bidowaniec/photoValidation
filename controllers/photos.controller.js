@@ -20,11 +20,11 @@ exports.add = async (req, res) => {
     stringValidator(author, patternWithoutHTML);
     stringValidator(email, patternEmail);
     const file = req.files.file;
-    const properExtension = path.extname(file.path) === '.jpg';
+    const properExtension = ['.jpg', '.gif', '.png'].includes(path.extname(file.path));
     const properTitle = title.length <= 25;
     if(properTitle && author && email && properExtension) { // if fields are not empty...
 
-      const fileName = file.path.split('/').slice(-1)[0]; // cut only filename from full path, e.g. C:/test/abc.jpg -> abc.jpg
+      const fileName = path.basename(file.path); // cut only filename from full path, e.g. C:/test/abc.jpg -> abc.jpg
       const newPhoto = new Photo({ title, author, email, src: fileName, votes: 0 });
       await newPhoto.save(); // ...save new photo in DB
       res.json(newPhoto);
@@ -34,7 +34,8 @@ exports.add = async (req, res) => {
     }
 
   } catch(err) {
-    res.status(500).json(err);
+    console.log(err);
+    res.status(500).json({ err: err.message });
   }
 
 };
