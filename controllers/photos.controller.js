@@ -47,7 +47,8 @@ exports.loadAll = async (req, res) => {
   try {
     res.json(await Photo.find());
   } catch(err) {
-    res.status(500).json(err);
+    console.log(err);
+    res.status(500).json({ err: err.message });
   }
 
 };
@@ -79,7 +80,8 @@ exports.vote = async (req, res) => {
       res.send({ message: 'OK' });
     }
   } catch(err) {
-    res.status(500).json(err);
+    console.log(err);
+    res.status(500).json({ err: err.message });
   }
 
 };
